@@ -11,22 +11,29 @@
   "dependencies": {
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "d3-dsv": "^3.0.1",
+    "d3-format": "^3.1.0",
+    "d3-time-format": "^4.1.0",
     "framer-motion": "^11.4.0",
     "lucide-react": "^0.438.0",
     "next": "14.2.7",
     "react": "^18",
     "react-dom": "^18",
+    "react-financial-charts": "^2.0.1",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
-    "typescript": "^5",
+    "@types/d3-dsv": "^3.0.7",
+    "@types/d3-format": "^3.0.4",
+    "@types/d3-time-format": "^4.0.3",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "eslint": "^8",
+    "eslint-config-next": "14.2.7",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
-    "eslint": "^8",
-    "eslint-config-next": "14.2.7"
+    "typescript": "^5"
   }
 }
