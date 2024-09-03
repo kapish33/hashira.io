@@ -2,6 +2,7 @@
 import { TabType } from "@/types/tabs";
 import React from "react";
 import StockChart from "./StockChart";
+import { AreaChartWithVolume } from "./stock-tremor";
 
 interface TabsProps {
   selectedTab: TabType;
@@ -15,7 +16,7 @@ const CustomChart: React.FC<TabsProps> = ({ selectedTab }) => {
       case "Chart":
         return <div className="w-full p-2 relative"><StockChart /></div>;
       case "Statistics":
-        return <div>Statistics Chart Content</div>;
+        return  <AreaChartWithVolume />;
       case "Analysis":
         return <div>Analysis Chart Content</div>;
       case "Settings":

@@ -31,6 +31,7 @@ export default function Home() {
 
       {/* Based On Selected Tab Show Chart */}
       <CustomChart selectedTab={selectedTab} />
+     
     </section>
   );
 }
