@@ -30,7 +30,7 @@ const CustomChart: React.FC<TabsProps> = ({ selectedTab }) => {
     setData(newData);
   }, [timeFrames]);
 
-  console.log("timeFrames",timeFrames)
+  // console.log("timeFrames",timeFrames)
 
   const renderContent = () => {
     switch (selectedTab) {

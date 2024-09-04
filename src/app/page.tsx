@@ -4,14 +4,30 @@ import BlurIn from "@/components/magicui/blur-in";
 import NumberTicker from "@/components/magicui/number-ticker";
 import Tabs from "@/components/tabs";
 import { tabs, TabType } from "@/types/tabs";
-import { useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useRouter } from 'next/navigation'
+import { useEffect, useState } from "react";
 
 export default function Home() {
   const [selectedTab, setSelectedTab] = useState<TabType>('Chart');
+  const searchParams = useSearchParams()
+  const router = useRouter()
+
+ 
+  const search = searchParams.get('search')
+
+  useEffect(() => {
+    // Set the selected tab based on the 'search' parameter
+    if (search && tabs.includes(search as TabType)) {
+      setSelectedTab(search as TabType);
+    }
+  }, [search]);
 
   // Handle tab change
   const handleTabChange = (tab: TabType) => {
+    router.push(`/?search=${tab}`);
     setSelectedTab(tab);
+     
   };
   return (
     <section className="container mx-auto px-4 py-16 sm:px-6 lg:px-8 bg-red-">
