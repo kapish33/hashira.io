@@ -3,10 +3,14 @@ import { TabType } from "@/types/tabs";
 import React from "react";
 import StockChart from "./StockChart";
 import { AreaChartWithVolume } from "./stock-tremor";
+import  LineChart  from "./LineChart";
+import { generateStockDataArray } from "@/utils/mockLineVolumeData";
 
 interface TabsProps {
   selectedTab: TabType;
 }
+
+const data = generateStockDataArray(100);
 
 const CustomChart: React.FC<TabsProps> = ({ selectedTab }) => {
   const renderContent = () => {
@@ -18,7 +22,7 @@ const CustomChart: React.FC<TabsProps> = ({ selectedTab }) => {
       case "Statistics":
         return  <AreaChartWithVolume />;
       case "Analysis":
-        return <div>Analysis Chart Content</div>;
+        return <LineChart data={data} />;
       case "Settings":
         return <div>Settings Chart Content</div>;
       default:
@@ -34,3 +38,5 @@ const CustomChart: React.FC<TabsProps> = ({ selectedTab }) => {
 };
 
 export default CustomChart;
+
+
