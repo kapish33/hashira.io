@@ -308,6 +308,7 @@ const LineChart = ({ data, timeFrames, setTimeFrame }) => {
           {timeIntervals.map((interval) => {
             return (
               <button
+                key={interval}
                 onClick={() => setTimeFrame(interval)}
                 className={cn(
                   "px-4 py-2",
