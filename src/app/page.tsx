@@ -1,4 +1,5 @@
 "use client";
+import CustomChart from "@/components/custom-chart";
 import BlurIn from "@/components/magicui/blur-in";
 import NumberTicker from "@/components/magicui/number-ticker";
 import Tabs from "@/components/tabs";
@@ -12,7 +13,6 @@ export default function Home() {
   const handleTabChange = (tab: TabType) => {
     setSelectedTab(tab);
   };
-
   return (
     <section className="container mx-auto px-4 py-16 sm:px-6 lg:px-8 bg-red-">
       {/* Price Section $$ */}
@@ -24,10 +24,14 @@ export default function Home() {
         />
       </div>
       {/* Increasing Stock Section */}
-      <NumberTicker className="!text-green-600" value={2_161.42} />
+      <div className="!text-green-600">+ <NumberTicker className="!text-green-600"  value={2_161.42} /> (3.54%)</div>
 
       {/* Various Chart OPTIONS */}
       <Tabs tabs={[...tabs]} selectedTab={selectedTab} onTabChange={handleTabChange} />
+
+      {/* Based On Selected Tab Show Chart */}
+      <CustomChart selectedTab={selectedTab} />
+     
     </section>
   );
 }
