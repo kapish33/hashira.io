@@ -1,30 +1,49 @@
 'use client'
-import { TabType } from "@/types/tabs";
-import React from "react";
+import { getNumberOfDataPoints, TabType, TimeIntervalsType } from "@/types/tabs";
+import React, { useEffect, useState } from "react";
 import StockChart from "./StockChart";
 import { AreaChartWithVolume } from "./stock-tremor";
 import  LineChart  from "./LineChart";
 import { generateStockDataArray } from "@/utils/mockLineVolumeData";
+import HireMe from "./hire-me";
 
 interface TabsProps {
   selectedTab: TabType;
 }
 
-const data = generateStockDataArray(100);
 
 const CustomChart: React.FC<TabsProps> = ({ selectedTab }) => {
+  // const data = generateStockDataArray(100);
+
+  const [timeFrames,setTimeFrames] = useState<TimeIntervalsType>("1w");
+  const [data, setData] = useState<any[]>(generateStockDataArray(100)); // Initial data generation
+
+
+  // Handle Time change
+  const handleTimeChange = (time:TimeIntervalsType ) => {
+    setTimeFrames(time);
+  };
+
+   // Regenerate data whenever timeFrames changes
+   useEffect(() => {
+    const newData = generateStockDataArray(getNumberOfDataPoints(timeFrames));
+    setData(newData);
+  }, [timeFrames]);
+
+  console.log("timeFrames",timeFrames)
+
   const renderContent = () => {
     switch (selectedTab) {
       case "Summary":
-        return <div>Summary Chart Content</div>;
-      case "Chart":
+        return <HireMe />;
+      case "Analysis":
         return <div className="w-full p-2 relative"><StockChart /></div>;
       case "Statistics":
         return  <AreaChartWithVolume />;
-      case "Analysis":
-        return <LineChart data={data} />;
+      case "Chart":
+        return <LineChart timeFrames={timeFrames} setTimeFrame={handleTimeChange} data={data} />;
       case "Settings":
-        return <div>Settings Chart Content</div>;
+        return <HireMe />;
       default:
         return <div>Select a tab to see content</div>;
     }

@@ -30,8 +30,10 @@ const chartdata = [
 ]
 
 export const AreaChartWithVolume = () => (
+  <>
+  <h1>Chart using Tailwind CSS</h1>
   <AreaChart
-    className="h-56"
+    className="h-[500px]"
     data={chartdata}
     index="hour"
     categories={["temperature"]}
@@ -45,4 +47,5 @@ export const AreaChartWithVolume = () => (
     showTooltip={false}
     xAxisLabel="24H Temperature Readout (Zurich)"
   />
+  </>
 )

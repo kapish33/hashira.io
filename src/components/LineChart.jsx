@@ -1,14 +1,41 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import * as d3 from "d3";
+import { RiAddCircleLine, RiCloseCircleLine, RiExpandDiagonalLine } from "@remixicon/react";
+import { timeIntervals } from "@/types/tabs";
+import { cn } from "@/lib/utils";
 
-const LineChart = ({ data }) => {
+const LineChart = ({ data, timeFrames, setTimeFrame }) => {
+  const [modal, setModal] = useState(false);
   const svgRef = useRef();
+  const [dimensions, setDimensions] = useState({ width: 2000, height: 550 });
+
+  useEffect(() => {
+    // Function to handle resizing
+    const handleResize = () => {
+      const svgElement = svgRef.current;
+      if (svgElement) {
+        setDimensions({
+          width: svgElement.clientWidth,
+          height: svgElement.clientHeight,
+        });
+      }
+    };
+
+
+    // Set initial dimensions
+    handleResize();
+
+    // Attach resize event listener
+    window.addEventListener("resize", handleResize);
+
+    // Cleanup listener on unmount
+    return () => window.removeEventListener("resize", handleResize);
+  }, [modal]);
 
   useEffect(() => {
     const svg = d3.select(svgRef.current);
-    const width = 800;
-    const height = 400;
-    const margin = { top: 30, right: 60, bottom: 0, left: 0 };
+    const { width, height } = dimensions;
+    const margin = { top: 30, right: 40, bottom: 2, left: 0 };
 
     // Clear previous chart
     svg.selectAll("*").remove();
@@ -92,6 +119,28 @@ const LineChart = ({ data }) => {
       .attr("height", (d) => height - margin.bottom - yVolumeScale(d.volume))
       .attr("fill", "rgba(128, 128, 128, 0.4)");
 
+    // Number of lines you want to draw
+    const numLines = 6;
+
+    // Calculate the spacing between each line
+    const lineSpacing = (width - margin.left - margin.right) / (numLines - 1);
+
+    // Append a group for the vertical lines
+    const linesGroup = svg.append("g").attr("class", "vertical-lines");
+
+    // Draw each line
+    for (let i = 0; i < numLines; i++) {
+      linesGroup
+        .append("line")
+        .attr("x1", margin.left + i * lineSpacing)
+        .attr("y1", margin.top)
+        .attr("x2", margin.left + i * lineSpacing)
+        .attr("y2", height - margin.bottom)
+        .attr("stroke", "lightgray")
+        .attr("stroke-width", 0.5)
+        .attr("stroke-linecap", "round");
+    }
+
     const trackingGroup = svg
       .append("g")
       .attr("class", "tracking-group")
@@ -157,7 +206,8 @@ const LineChart = ({ data }) => {
     const grayTooltipGroup = svg
       .append("g")
       .attr("class", "gray-tooltip-group")
-      .style("pointer-events", "none");
+      .style("pointer-events", "none")
+      .style("opacity", 0); // Initially hidden
 
     const grayTooltipRect = grayTooltipGroup
       .append("rect")
@@ -187,7 +237,7 @@ const LineChart = ({ data }) => {
       .text("Value"); // Placeholder text
 
     svg.on("mousemove", function (event) {
-        grayTooltipGroup.style("opacity", 1);
+      grayTooltipGroup.style("opacity", 1);
       const [x, y] = d3.pointer(event);
 
       // Find the closest data point
@@ -241,13 +291,54 @@ const LineChart = ({ data }) => {
       horizontalLine.style("opacity", 0);
       grayTooltipGroup.style("opacity", 0);
     });
+  }, [data, dimensions,modal]);
 
-    // svg.on("mousemove", function () {
-    //   grayTooltipGroup.style("opacity", 1);
-    // });
-  }, [data]);
+  return (
+    <>
+      <div className="flex flex-wrap justify-between w-full pt-2">
+        <div className="flex space-x-2">
+          <button onClick={() => setModal(true)} className="flex items-center px-4 py-2 gap-2 bg">
+            <RiAddCircleLine /> Fullscreen
+          </button>
+          <button className="flex items-center px-4 py-2 gap-2">
+            <RiExpandDiagonalLine /> Compare
+          </button>
+        </div>
+        <div className="flex gap-2">
+          {timeIntervals.map((interval) => {
+            return (
+              <button
+                onClick={() => setTimeFrame(interval)}
+                className={cn(
+                  "px-4 py-2",
+                  interval == timeFrames && "bg-[#4B40EE] text-white rounded-md"
+                )}
+              >
+                {interval}
+              </button>
+            );
+          })}
+        </div>
+      </div>
 
-  return <svg ref={svgRef} width="800" height="400"></svg>;
+      <svg ref={svgRef} height={dimensions.height} width={dimensions.width} />
+
+      {modal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-75">
+            <div className="relative w-full h-full bg-white p-4">
+              <button
+                onClick={() => setModal(false)}
+                className="absolute top-0 right-0 p-2 text-gray-700 bg-white rounded-full hover:bg-gray-100"
+                title="Close"
+              >
+                <RiCloseCircleLine size={24} />
+              </button>
+              <svg ref={svgRef} className={cn("w-full h-full")}></svg>
+            </div>
+          </div>
+        )}
+    </>
+  );
 };
 
 export default LineChart;
